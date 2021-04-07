@@ -77,7 +77,7 @@ def ltc_command(update: Update, _: CallbackContext) -> None:
         print(f'Other error occurred: {err}')
 
 
-def budda_command(update: Update, callback: CallbackContext) -> None:
+def buda_command(update: Update, callback: CallbackContext) -> None:
     budda_coins = ('btc', 'eth', 'ltc', 'bch')
     try:
         market_id = context.args[0]
@@ -145,7 +145,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("btc", btc_command))
     dispatcher.add_handler(CommandHandler("ltc", ltc_command))
-    dispatcher.add_handler(CommandHandler("budda", budda_command))
+    dispatcher.add_handler(CommandHandler("buda", buda_command, pass_args=True)))
 
     # on non command i.e message - echo the message on Telegram
     dispatcher.add_handler(InlineQueryHandler(inlinequery))

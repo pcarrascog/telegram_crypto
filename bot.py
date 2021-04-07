@@ -77,7 +77,7 @@ def ltc_command(update: Update, _: CallbackContext) -> None:
         print(f'Other error occurred: {err}')
 
 
-def buda_command(update: Update, callback: CallbackContext) -> None:
+def buda_command(update: Update, context: CallbackContext) -> None:
     budda_coins = ('btc', 'eth', 'ltc', 'bch')
     try:
         market_id = context.args[0]

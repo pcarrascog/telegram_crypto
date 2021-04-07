@@ -31,6 +31,13 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+class Error(Exception):
+    pass
+
+class NotAdmitedError(Error):
+    pass
+
+
 # Define a few command handlers. These usually take the two arguments update and
 # context. Error handlers also receive the raised TelegramError object in error.
 def start(update: Update, _: CallbackContext) -> None:
@@ -70,6 +77,28 @@ def ltc_command(update: Update, _: CallbackContext) -> None:
         print(f'Other error occurred: {err}')
 
 
+def budda_command(update: Update, callback: CallbackContext) -> None:
+    budda_coins = ('btc', 'eth', 'ltc', 'bch')
+    try:
+        market_id = context.args[0]
+        if market_id in budda_coins:
+            market_id = market_id + '-clp'
+        else:
+            raise NotAdmitedError
+        url = f'https://www.buda.com/api/v2/markets/{market_id}/ticker'
+        response = requests.get(url)
+        #print(response.json())
+        jsonResponse = response.json()
+        update.message.reply_text(jsonResponse["ticker"]["last_price"])
+    except HTTPError as http_err:
+        print(f'HTTP error occurred: {http_err}')
+    except Exception as err:
+        print(f'Other error occurred: {err}')
+    except NotAdmitedError:
+        print(f'This coin is not admited')
+        print()
+
+
 def inlinequery(update: Update, _: CallbackContext) -> None:
     """Handle the inline query."""
     query = update.inline_query.query
@@ -106,7 +135,7 @@ def main() -> None:
     # Create the Updater and pass it your bot's token.
     TOKEN = os.getenv('TOKEN')
     print(TOKEN)
-    updater = Updater(TOKEN)
+    updater = Updater(TOKEN, use_context=True)  # use_context by default True
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
@@ -116,6 +145,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("btc", btc_command))
     dispatcher.add_handler(CommandHandler("ltc", ltc_command))
+    dispatcher.add_handler(CommandHandler("budda", budda_command))
 
     # on non command i.e message - echo the message on Telegram
     dispatcher.add_handler(InlineQueryHandler(inlinequery))

@@ -145,7 +145,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("btc", btc_command))
     dispatcher.add_handler(CommandHandler("ltc", ltc_command))
-    dispatcher.add_handler(CommandHandler("buda", buda_command, pass_args=True)))
+    dispatcher.add_handler(CommandHandler("buda", buda_command, pass_args=True))
 
     # on non command i.e message - echo the message on Telegram
     dispatcher.add_handler(InlineQueryHandler(inlinequery))
